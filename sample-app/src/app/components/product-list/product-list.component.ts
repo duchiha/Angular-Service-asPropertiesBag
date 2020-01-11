@@ -20,15 +20,15 @@ export class ProductListComponent implements OnInit {
   public set displayImage(value: boolean) {
     this.productParamsBagService.displayImage = value;
   }
-  
+
   errMessage: string;
 
-  _listFilter: string;
+ 
    get listFilter(): string {
-    return this._listFilter;
+    return this.productParamsBagService.listFilter;
   }
    set listFilter(value: string) {
-    this._listFilter = value;
+    this.productParamsBagService.listFilter = value;
     this.filteredProducts = this.listFilter ? this.performFiltering(this.listFilter) : this.products;
   }
 
@@ -41,7 +41,7 @@ export class ProductListComponent implements OnInit {
     this.productService.getProducts().subscribe({
       next: products => {
         this.products = products;
-        this.filteredProducts = this.products;
+        this.filteredProducts = this.performFilteringOnInit(this.listFilter, this.products);
       },
       error: err => this.errMessage = err
     });
@@ -55,6 +55,17 @@ export class ProductListComponent implements OnInit {
     filterBy = filterBy.toLocaleLowerCase();
     return this.products.filter((product: IProduct) =>
       product.productName.toLocaleLowerCase().indexOf(filterBy) !== -1);
+  }
+
+  performFilteringOnInit(filterBy: string, products:IProduct[]): IProduct[] {
+    if (filterBy) {
+      filterBy = filterBy.toLocaleLowerCase();
+    return products.filter((product: IProduct) =>
+      product.productName.toLocaleLowerCase().indexOf(filterBy) !== -1);
+      
+    } else {
+      return products;
+    }
   }
 
   onRatingClicked(notification: string): void {

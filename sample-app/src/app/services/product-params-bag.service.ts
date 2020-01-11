@@ -5,4 +5,5 @@ import { Injectable } from '@angular/core';
 })
 export class ProductParamsBagService {
   displayImage: boolean = false;
+  listFilter: string;
 }
