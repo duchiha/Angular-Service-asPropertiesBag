@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IProduct } from '../../model/iproduct';
 import { ProductService } from '../../services/product.service';
+import { ProductParamsBagService } from 'src/app/services/product-params-bag.service';
 
 @Component({
   selector: 'app-product-list',
@@ -12,7 +13,14 @@ export class ProductListComponent implements OnInit {
   pageTitle: string = 'Product List';
   imageWidth: number = 60;
   imageMargin: number = 5;
-  displayImage: boolean = false;
+ 
+  public get displayImage(): boolean {
+    return this.productParamsBagService.displayImage;
+  }
+  public set displayImage(value: boolean) {
+    this.productParamsBagService.displayImage = value;
+  }
+  
   errMessage: string;
 
   _listFilter: string;
@@ -27,7 +35,7 @@ export class ProductListComponent implements OnInit {
   filteredProducts: IProduct[];
   products: IProduct[] = [];
 
-  constructor(private productService: ProductService) { }
+  constructor(private productService: ProductService, private productParamsBagService:ProductParamsBagService) { }
 
   ngOnInit(): void {
     this.productService.getProducts().subscribe({
